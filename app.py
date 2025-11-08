@@ -1815,6 +1815,6 @@ with gr.Blocks(
         show_error=True,
         share=False,
         server_name="127.0.0.1",
-        server_port=8080,
+        server_port=7860,
         ssr_mode=False,
     )
