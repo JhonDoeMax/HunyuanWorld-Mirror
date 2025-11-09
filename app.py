@@ -93,6 +93,11 @@ def run_model(
     from src.models.models.worldmirror import WorldMirror
     from src.models.utils.geometry import depth_to_world_coords_points
 
+    # Убедитесь, что используете GPU
+
+    print(f"GPU available: {torch.cuda.is_available()}")
+    print(f"GPU memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.1f} GB")
+
     print(f"Processing images from {target_dir}")
 
     # Device check
@@ -237,7 +242,9 @@ def run_model(
 
     # Clean up
     torch.cuda.empty_cache()
-
+    if torch.cuda.is_available():
+        torch.cuda.synchronize()
+        
     return outputs, processed_data
 
 
@@ -644,6 +651,11 @@ def gradio_demo(
         del predictions
         gc.collect()
         torch.cuda.empty_cache()
+
+        # Принудительная очистка памяти PyTorch
+        if torch.cuda.is_available():
+            torch.cuda.synchronize()
+
 
         # Get terminal output and restore stdout
         terminal_log = tee.getvalue()
